@@ -12,33 +12,26 @@ source:
   sha256: {{ sha256sum }}
   patches:
     - patches/0001-Fix-tests-for-numpy-1.14.0.patch
-
+    - patches/0001-Suppress-HealthCheck-for-test_batch_outer_computes_c.patch  # [osx and py27]
 
 build:
   number: 0
   script: python setup.py install --single-version-externally-managed --record=record.txt
-  skip: True  # [not x86_64]
-  features:
-    - vc9   # [win and py27]
-    - vc14  # [win and py>=35]
 
 requirements:
-  build:
-    - toolchain   # [unix]
-    - msinttypes  # [win and py27]
+  host:
+    - msinttypes  # [win and vc<14]
     - python
     - setuptools
-    # Pin numpy at build time with the minimum version available.
-    - numpy 1.8.*   # [not (win and (py35 or py36))]
-    - numpy 1.9.*   # [win and py35]
-    - numpy 1.11.*  # [win and py36]
+    - numpy
+
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
 
   run:
     - python
-    - numpy >=1.7
-    - numpy >=1.8   # [not (win and (py35 or py36))]
-    - numpy >=1.9   # [win and py35]
-    - numpy >=1.11  # [win and py36]
+    - {{ pin_compatible('numpy') }}
     - murmurhash >=0.28,<0.30
     - cymem >=1.30,<1.32
     - preshed >=1.0.0,<2.0.0
@@ -64,7 +57,9 @@ test:
     - thinc.api
     - thinc.linear
     - thinc.extra
+    - thinc.extra._vendorized
     - thinc.neural
+    - thinc.neural._classes
 
 about:
   home: https://github.com/explosion/thinc/
@@ -76,6 +71,7 @@ about:
     and dozens of classes. It drives https://spacy.io , a pipeline of very
     efficient NLP components. I’ve only used thinc from Cython; no real Python
     API is currently available.
+  dev_url: https://github.com/explosion/thinc
 
 extra:
   recipe-maintainers:
