@@ -11,12 +11,17 @@ source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: {{ sha256sum }}
   patches:
-    - patches/0001-Fix-tests-for-numpy-1.14.0.patch
-    - patches/0001-Suppress-HealthCheck-for-test_batch_outer_computes_c.patch  # [osx and py27]
+    - patches/0001-Don-t-force-bitness-of-output-binaries.patch
+    - patches/0002-Fix-link-command-generation-for-THINC_BLAS.patch
 
 build:
   number: 0
-  script: python setup.py install --single-version-externally-managed --record=record.txt
+  script:
+    - export THINC_BLAS=$PREFIX/lib/libopenblas{{ SHLIB_EXT }}  # [unix and blas_impl == 'openblas']
+    - export THINC_BLAS=$PREFIX/lib/libmkl_rt{{ SHLIB_EXT }}    # [unix and blas_impl == 'mkl']
+    - set THINC_BLAS=%LIBRARY_LIB%\mkl_rt.lib      # [win and blas_impl == 'mkl']
+    - python setup.py install --single-version-externally-managed --record=record.txt
+  skip: True  # [blas_impl == 'openblas' and win]
 
 requirements:
   host:
@@ -24,6 +29,8 @@ requirements:
     - python
     - setuptools
     - numpy
+    - mkl-devel {{ mkl }}  # [blas_impl == 'mkl']
+    - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
 
   build:
     - {{ compiler('c') }}
@@ -37,10 +44,10 @@ requirements:
     - preshed >=1.0.0,<2.0.0
     - tqdm >=4.10.0,<5.0.0
     - cytoolz
-    - plac >=0.9.6,<1.0.0
+    - plac >=0.9,<1.0
     - six >=1.10.0,<2.0.0
-    - wrapt >=1.10.10,<2.0.0
-    - dill >=0.2.6,<0.3.0
+    - wrapt >=1.10.10,<1.11.0
+    - dill >=0.2.7,<0.3.0
     - termcolor >=1.1.0,<1.2.0
     - pathlib >=1.0.0,<2.0.0  # [py27]
     - msgpack-numpy >=0.4.1
@@ -51,6 +58,7 @@ test:
     - hypothesis
     - pytest
     - mock
+    - nomkl  # [x86 and blas_impl != 'mkl']
 
   imports:
     - thinc

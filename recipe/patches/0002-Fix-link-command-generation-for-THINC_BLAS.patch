@@ -1,0 +1,36 @@
+From 6fabf21c5a377e94799c173496e4a3c2a2020d05 Mon Sep 17 00:00:00 2001
+From: Nehal J Wani <nehaljw.kkd1@gmail.com>
+Date: Thu, 21 Jun 2018 14:24:10 -0500
+Subject: [PATCH 2/2] Fix link command generation for THINC_BLAS
+
+---
+ setup.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index 7886cf4..d55a37c 100644
+--- a/setup.py
++++ b/setup.py
+@@ -282,9 +282,9 @@ class build_ext_options:
+                 if 'THINC_BLAS' in os.environ:
+                     lib_loc = os.environ['THINC_BLAS']
+                     lib_path, lib_name = os.path.split(lib_loc)
+-                    if lib_name.endswith('.so'):
++                    if lib_name.endswith(('.so', '.dylib')):
+                         is_shared = True
+-                        lib_name = lib_name[3:-3]
++                        lib_name = lib_name.rsplit('.', 1)[0][3:]
+                     else:
+                         is_shared = False
+                     print('Using BLAS:', lib_path, lib_name)
+@@ -296,6 +296,7 @@ class build_ext_options:
+                     else:
+                         compile_options['other']['gcc'].append('-l:%s' % lib_name)
+                         link_options['other'].append('-l:%s' % lib_name)
++                    link_options['msvc'].append(lib_loc)
+                 elif self.compiler.platform == 'darwin':
+                     e.extra_compile_args.append('-framework Accelerate')
+                     e.extra_link_args.append('-framework Accelerate')
+-- 
+2.17.0
+
