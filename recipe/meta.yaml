@@ -48,6 +48,7 @@ test:
     - hypothesis
     - pytest
     - mock
+    - pathy
   imports:
     - thinc
     - thinc.api
