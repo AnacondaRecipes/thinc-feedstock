@@ -54,7 +54,7 @@ test:
     - thinc.api
     #- thinc.linear
     - thinc.extra
-    - thinc.neural
+    #- thinc.neural
 
   commands:
     - python -m pytest --tb=native --pyargs thinc
