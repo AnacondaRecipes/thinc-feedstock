@@ -56,9 +56,7 @@ test:
   imports:
     - thinc
     - thinc.api
-    - thinc.linear
     - thinc.extra
-    - thinc.neural
 
   commands:
     - python -m pytest --tb=native --pyargs thinc
