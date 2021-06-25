@@ -7,47 +7,54 @@ package:
 source:
   url: https://pypi.io/packages/source/t/thinc/thinc-{{ version }}.tar.gz
   sha256: 9b3aedf175ac731c8f7e98d3ddbcba60b238211cad7c5aea6d9ddffb3bbffc92
-  patches: 0001-importorskip-tests.patch
+  # The issue with skipping tests if packages are missing was fixed,
+  # see https://github.com/explosion/thinc/commit/947d71eadc794b837dece48147e78fbf9ea17be5
+  #patches: 0001-importorskip-tests.patch
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps -vv
-  skip: true  # [win and py27]
+  # The dependency cython-blis works on x86_64 architectures
+  skip: true  # [win32]
 
 requirements:
   build:
     - {{ compiler('cxx') }}
+    - git
+    - patch  # [not win]
+    - m2-patch  # [win]
   host:
-    - cython
-    - python
-    - pip
-    - numpy
-    - setuptools
-    - wheel
+    - cython >=0.25,<3.0
+    - python >=3.6
+    - pip >=19.3
+    - numpy >=1.15.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
     - murmurhash >=0.28.0,<1.1.0
     - cython-blis >=0.4.0,<0.8.0
+    - setuptools
+    - wheel
   run:
-    - python
+    - python >=3.6
     - {{ pin_compatible('numpy') }}
     - murmurhash >=0.28.0,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
     - cython-blis >=0.4.0,<0.8.0
-    - wasabi >=0.4.0,<1.1.0
-    - srsly >=2.0.0,<3.0.0
-    - catalogue >=0.2.0,<3.0.0
-    - pydantic >=1.7.1,<1.8.0
+    - wasabi >=0.8.1,<1.1.0
+    - srsly >=2.4.0,<3.0.0
+    - catalogue >=2.0.4,<2.1.0
+    - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.9.0
     - dataclasses >=0.6,<1.0  # [py36]
-    - typing_extensions
+    - typing_extensions >=3.7.4.1,<4.0.0.0  # [py36 or py37]
     - contextvars >=2.4,<3  # [py36]
 
 test:
   requires:
     - hypothesis
-    - pytest
+    - pytest >=5.2.0
     - mock
+    - pathy >=0.3.5
   imports:
     - thinc
     - thinc.api
@@ -61,6 +68,7 @@ test:
 about:
   home: https://github.com/explosion/thinc/
   license: MIT
+  license_family: MIT
   license_file: LICENSE
   summary: 'thinc: Learn super-sparse multi-class models'
   description: |
