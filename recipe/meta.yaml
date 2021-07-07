@@ -20,10 +20,10 @@ requirements:
     - patch      #[not win]
     - m2-patch   #[win]
   host:
-    - cython
-    - python
+    - cython >=0.25,<3.0
+    - python >=3.6
     - pip
-    - numpy
+    - numpy >=1.15.0
     - setuptools
     - wheel
     - cymem >=2.0.2,<2.1.0
@@ -31,15 +31,15 @@ requirements:
     - murmurhash >=0.28.0,<1.1.0
     - cython-blis >=0.4.0,<0.8.0
   run:
-    - python
-    - {{ pin_compatible('numpy') }}
+    - python >=3.6
+    - numpy >=1.15.0
     - murmurhash >=0.28.0,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
     - cython-blis >=0.4.0,<0.8.0
-    - wasabi >=0.4.0,<1.1.0
-    - srsly >=2.0.0,<3.0.0
-    - catalogue >=0.2.0,<3.0.0
+    - wasabi >=0.8.1,<1.1.0
+    - srsly >=2.4.0,<3.0.0
+    - catalogue >=2.0.4,<2.1.0
     - pydantic >=1.7.1,<1.8.0
     - dataclasses >=0.6,<1.0  # [py36]
     - typing_extensions
@@ -47,6 +47,7 @@ requirements:
 
 test:
   requires:
+    - pip
     - hypothesis
     - pytest
     - mock
@@ -58,6 +59,7 @@ test:
     - thinc.neural
 
   commands:
+    - pip check
     - python -m pytest --tb=native --pyargs thinc
 
 about:
