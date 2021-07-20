@@ -1,4 +1,4 @@
-{% set version = "8.0.1" %}
+{% set version = "8.0.8" %}
 
 package:
   name: thinc
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/t/thinc/thinc-{{ version }}.tar.gz
-  sha256: 88755ccd076184f29ebc29a484347830fd52a29ece58aa611faec8a578a45810
+  sha256: cf2abbd99c56f21b8804f31f995460515d95a5c5988be39e0964469e0070987b
   patches: 0001-importorskip-tests.patch
 
 build:
