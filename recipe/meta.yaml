@@ -7,7 +7,6 @@ package:
 source:
   url: https://pypi.io/packages/source/t/thinc/thinc-{{ version }}.tar.gz
   sha256: 47662a3ae33d445a77b6ea7b772444805c7bba8991f122e350daf72dedc8171a
-  patches: 0001-importorskip-tests.patch
 
 build:
   number: 0
@@ -17,8 +16,6 @@ build:
 requirements:
   build:
     - {{ compiler('cxx') }}
-    - m2-patch  # [win]
-    - patch  # [not win]
   host:
     - cython
     - python
@@ -63,6 +60,7 @@ test:
 about:
   home: https://github.com/explosion/thinc/
   license: MIT
+  license_family: MIT
   license_file: LICENSE
   summary: 'thinc: Learn super-sparse multi-class models'
   description: |
@@ -70,6 +68,7 @@ about:
     and dozens of classes. It drives https://spacy.io , a pipeline of very
     efficient NLP components. I’ve only used thinc from Cython; no real Python
     API is currently available.
+  dev_url: https://github.com/explosion/thinc/
 
 extra:
   recipe-maintainers:
