@@ -11,7 +11,6 @@ source:
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps -vv
-  skip: True  # [win and py27]
   # 2021/11/08: thinc 8.0.13 requires cython-blis >=0.4.0,<0.8.0
   # but it's not available on win32 on defaults 
   skip: True  # [win32]
@@ -20,7 +19,7 @@ requirements:
   build:
     - {{ compiler('cxx') }}
   host:
-    - cython
+    - cython >=0.25,<3.0
     - python
     - pip
     - numpy
@@ -37,19 +36,18 @@ requirements:
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
     - cython-blis >=0.4.0,<0.8.0
-    - wasabi >=0.4.0,<1.1.0
-    - srsly >=2.0.0,<3.0.0
-    - catalogue >=0.2.0,<3.0.0
-    - pydantic >=1.7.1,<1.8.0
-    - dataclasses >=0.6,<1.0  # [py36]
-    - typing_extensions
-    - contextvars >=2.4,<3  # [py36]
+    - wasabi >=0.8.1,<1.1.0
+    - srsly >=2.4.0,<3.0.0
+    - catalogue >=2.0.4,<2.1.0
+    - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.9.0
+    - typing_extensions >=3.7.4.1,<4.0.0.0  # [py<=37]
 
 test:
   requires:
     - hypothesis
     - pytest
     - mock
+    - pathy >=0.3.5
   imports:
     - thinc
     - thinc.api
