@@ -11,6 +11,7 @@ source:
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps -vv
+  skip: True  # [py<36]
   # 2021/11/08: thinc 8.0.13 requires cython-blis >=0.4.0,<0.8.0
   # but it's not available on win32 on defaults 
   skip: True  # [win32]
