@@ -14,6 +14,9 @@ build:
   # 2021/11/08: thinc 8.0.13 requires cython-blis >=0.4.0,<0.8.0
   # but it's not available on win32 on defaults 
   skip: True  # [win32]
+  # 2021/11/11: skip s390x as many dependencies are not on this platform: 
+  # e.x., preshed, cython-blis, cymem, murmurhash. 
+  skip: True  # [s390x]
 
 requirements:
   build:
@@ -29,6 +32,7 @@ requirements:
     - preshed >=3.0.2,<3.1.0
     - murmurhash >=0.28.0,<1.1.0
     - cython-blis >=0.4.0,<0.8.0
+    # On arm64 only because without it the build failed 
     - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.9.0  # [arm64]
   run:
     - python
