@@ -31,14 +31,14 @@ requirements:
     - wheel
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
-    - murmurhash >=0.28.0,<1.1.0
+    - murmurhash >=1.0.2,<1.1.0
     - cython-blis >=0.4.0,<0.8.0
     # On arm64 only because without it the build failed 
     - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.9.0  # [arm64]
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - murmurhash >=0.28.0,<1.1.0
+    - murmurhash >=1.0.2,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
     - cython-blis >=0.4.0,<0.8.0
@@ -46,12 +46,16 @@ requirements:
     - srsly >=2.4.0,<3.0.0
     - catalogue >=2.0.4,<2.1.0
     - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.9.0
-    - typing_extensions >=3.7.4.1,<4.0.0.0  # [py<=37]
+    - setuptools
+    # Backports of modern Python features
+    - dataclasses >=0.6,<1.0  # [py<37]
+    - typing_extensions >=3.7.4.1,<4.0.0.0  # [py<38]
+    - contextvars >=2.4,<3  # [py<37]
 
 test:
   requires:
-    - hypothesis
-    - pytest
+    - hypothesis >=3.27.0,<7.0.0
+    - pytest >=5.2.0,<7.1.0
     - mock
     - pathy >=0.3.5
   imports:
@@ -76,6 +80,7 @@ about:
     efficient NLP components. I’ve only used thinc from Cython; no real Python
     API is currently available.
   dev_url: https://github.com/explosion/thinc/
+  doc_url: https://github.com/explosion/thinc/blob/v8.0.15/README.md
 
 extra:
   recipe-maintainers:
