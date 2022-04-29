@@ -26,15 +26,16 @@ requirements:
     - cython >=0.25,<3.0
     - python
     - pip
-    - numpy
+    - numpy   1.19  # [not (osx and arm64) and (py==38 or py==39)]
+    - numpy   1.21  # [(osx and arm64) and (py==38 or py==39)]
+    - numpy   1.21  # [py==310]
     - setuptools
     - wheel
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
     - murmurhash >=1.0.2,<1.1.0
-    - cython-blis >=0.4.0,<0.8.0
-    # On arm64 only because without it the build failed 
-    - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.9.0  # [arm64]
+    - cython-blis >=0.4.0,<0.8.0 
+    - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.9.0 
   run:
     - python
     - {{ pin_compatible('numpy') }}
