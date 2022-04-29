@@ -68,8 +68,7 @@ test:
   commands:
     # FileNotFoundError: [Errno 2] No such file or directory: 'gs://test-bucket/thinc_model',
     # 'gs://test-bucket/cool_shim.data', and 'gs://test-bucket/config.cfg'
-    - python -m pytest --tb=native --pyargs thinc  || true  # [not win]
-    - python -m pytest --tb=native --pyargs thinc  || exit 0  # [win]
+    - python -m pytest --tb=native --pyargs thinc -k "not (test_config_roundtrip_disk_respects_path_subclasses or test_shim_can_roundtrip_with_path_subclass or test_model_can_roundtrip_with_path_subclass)"
 
 about:
   home: https://github.com/explosion/thinc/
