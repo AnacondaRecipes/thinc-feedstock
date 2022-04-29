@@ -54,6 +54,7 @@ requirements:
 test:
   requires:
     - hypothesis
+    - mock
     - pytest
   imports:
     - thinc
