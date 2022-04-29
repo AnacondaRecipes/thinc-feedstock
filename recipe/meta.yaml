@@ -66,6 +66,8 @@ test:
     - thinc.neural
 
   commands:
+    # FileNotFoundError: [Errno 2] No such file or directory: 'gs://test-bucket/thinc_model',
+    # 'gs://test-bucket/cool_shim.data', and 'gs://test-bucket/config.cfg'
     - python -m pytest --tb=native --pyargs thinc  || true  # [not win]
     - python -m pytest --tb=native --pyargs thinc  || exit 0  # [win]
 
