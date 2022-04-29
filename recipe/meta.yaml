@@ -48,7 +48,6 @@ requirements:
     - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.9.0
     - setuptools
     # Backports of modern Python features
-    - dataclasses >=0.6,<1.0  # [py<37]
     - typing_extensions >=3.7.4.1,<4.0.0.0  # [py<38]
 
 test:
@@ -66,7 +65,7 @@ test:
   commands:
     # FileNotFoundError: [Errno 2] No such file or directory: 'gs://test-bucket/thinc_model',
     # 'gs://test-bucket/cool_shim.data', and 'gs://test-bucket/config.cfg'
-    #- python -m pytest --tb=native --pyargs thinc  # [not py==310]
+    - python -m pytest --tb=native --pyargs thinc -k "not (test_config_roundtrip_disk_respects_path_subclasses or test_shim_can_roundtrip_with_path_subclass or test_model_can_roundtrip_with_path_subclass)"
 
 about:
   home: https://github.com/explosion/thinc/
