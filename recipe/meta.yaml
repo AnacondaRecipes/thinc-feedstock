@@ -50,6 +50,9 @@ requirements:
     - typing_extensions >=3.7.4.1,<4.0.0.0  # [py<38]
 
 test:
+  requires:
+    # For thinc.api
+    - packaging
   imports:
     - thinc
     - thinc.api
