@@ -59,9 +59,10 @@ test:
   imports:
     - thinc
     - thinc.api
-    - thinc.linear
+    - thinc.backends
     - thinc.extra
-    - thinc.neural
+    - thinc.layers
+    - thinc.shims
   commands:
     - pip check
     - python -m pytest --tb=native --pyargs thinc
