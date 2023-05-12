@@ -1,5 +1,5 @@
 {% set name = "thinc" %}
-{% set version = "8.0.15" %}
+{% set version = "8.1.10" %}
 
 package:
   name: {{ name|lower }}
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 2e315020da85c3791e191fbf37c4a2433f57cf322e27380da0cd4de99d96053b
+  sha256: 6c4a48d7da07e044e84a68cbb9b22f32f8490995a2bab0bfc60e412d14afb991
 
 build:
-  number: 1
+  number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   skip: True  # [py<36]
   # 2021/11/11: skip s390x as many dependencies are not on this platform: 
@@ -21,30 +21,32 @@ requirements:
   build:
     - {{ compiler('cxx') }}
   host:
+    - cymem 2.0.6
     - cython 0.29.32
-    - python
-    - pip
+    - cython-blis 0.7.9
+    - murmurhash 1.0.7
     - numpy {{ numpy }}
+    - pip
+    - preshed 3.0.6
+    - python
     - setuptools
     - wheel
-    - cymem 2.0.6
-    - preshed 3.0.6
-    - murmurhash 1.0.7
-    - cython-blis 0.7.7
   run:
     - python
     - {{ pin_compatible('numpy') }}
     - murmurhash >=1.0.2,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
-    - cython-blis >=0.4.0,<0.8.0
-    - wasabi >=0.8.1,<1.1.0
+    - cython-blis >=0.7.8,<0.8.0
+    - wasabi >=0.8.1,<1.2.0
     - srsly >=2.4.0,<3.0.0
     - catalogue >=2.0.4,<2.1.0
-    - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.9.0
+    - confection >=0.0.1,<1.0.0
+    - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.11.0
+    - packaging >=20.0
     - setuptools
     # Backports of modern Python features
-    - typing_extensions >=3.7.4.1,<4.0.0.0  # [py<38]
+    - typing_extensions >=3.7.4.1,<4.5.0  # [py<38]
 
 test:
   requires:
@@ -53,18 +55,16 @@ test:
     - mock
     - pathy >=0.3.5
     # For thinc.api
-    - packaging
     - pip
   imports:
     - thinc
     - thinc.api
+    - thinc.linear
     - thinc.extra
+    - thinc.neural
   commands:
     - pip check
-    # FileNotFoundError: [Errno 2] No such file or directory: 'gs://test-bucket/thinc_model',
-    # 'gs://test-bucket/cool_shim.data', and 'gs://test-bucket/config.cfg'
-    - python -m pytest --tb=native --pyargs thinc -k "not (test_config_roundtrip_disk_respects_path_subclasses or test_shim_can_roundtrip_with_path_subclass or test_model_can_roundtrip_with_path_subclass)"
-
+    - python -m pytest --tb=native --pyargs thinc
 about:
   home: https://thinc.ai/
   license: MIT
