@@ -1,20 +1,18 @@
+{% set name = "thinc" %}
 {% set version = "8.0.15" %}
 
 package:
-  name: thinc
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/t/thinc/thinc-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 2e315020da85c3791e191fbf37c4a2433f57cf322e27380da0cd4de99d96053b
 
 build:
-  number: 0
-  script: {{ PYTHON }} -m pip install . --no-deps -vv
+  number: 1
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   skip: True  # [py<36]
-  # 2021/11/08: thinc 8.0.13 requires cython-blis >=0.4.0,<0.8.0
-  # but it's not available on win32 on defaults 
-  skip: True  # [win32]
   # 2021/11/11: skip s390x as many dependencies are not on this platform: 
   # e.x., preshed, cython-blis, cymem, murmurhash. 
   skip: True  # [s390x]
@@ -23,16 +21,16 @@ requirements:
   build:
     - {{ compiler('cxx') }}
   host:
-    - cython >=0.25,<3.0
+    - cython 0.29.32
     - python
     - pip
-    - numpy
+    - numpy {{ numpy }}
     - setuptools
     - wheel
-    - cymem >=2.0.2,<2.1.0
-    - preshed >=3.0.2,<3.1.0
-    - murmurhash >=1.0.2,<1.1.0
-    - cython-blis >=0.4.0,<0.8.0
+    - cymem 2.0.6
+    - preshed 3.0.6
+    - murmurhash 1.0.7
+    - cython-blis 0.7.7
   run:
     - python
     - {{ pin_compatible('numpy') }}
@@ -43,7 +41,7 @@ requirements:
     - wasabi >=0.8.1,<1.1.0
     - srsly >=2.4.0,<3.0.0
     - catalogue >=2.0.4,<2.1.0
-    - pydantic >=1.7.4,!=1.8,!=1.8.1
+    - pydantic >=1.7.4,!=1.8,!=1.8.1,<1.9.0
     - setuptools
     # Backports of modern Python features
     - typing_extensions >=3.7.4.1,<4.0.0.0  # [py<38]
@@ -56,11 +54,13 @@ test:
     - pathy >=0.3.5
     # For thinc.api
     - packaging
+    - pip
   imports:
     - thinc
     - thinc.api
     - thinc.extra
   commands:
+    - pip check
     # FileNotFoundError: [Errno 2] No such file or directory: 'gs://test-bucket/thinc_model',
     # 'gs://test-bucket/cool_shim.data', and 'gs://test-bucket/config.cfg'
     - python -m pytest --tb=native --pyargs thinc -k "not (test_config_roundtrip_disk_respects_path_subclasses or test_shim_can_roundtrip_with_path_subclass or test_model_can_roundtrip_with_path_subclass)"
@@ -70,12 +70,13 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE
-  summary: 'thinc: Learn super-sparse multi-class models'
+  summary: A refreshing functional take on deep learning, compatible with your favorite libraries.
   description: |
-    thinc is a Cython library for learning models with millions of parameters
-    and dozens of classes. It drives https://spacy.io , a pipeline of very
-    efficient NLP components. I’ve only used thinc from Cython; no real Python
-    API is currently available.
+    Thinc is a lightweight deep learning library that offers an elegant, type-checked, functional-programming API 
+    for composing models, with support for layers defined in other frameworks 
+    such as PyTorch, TensorFlow and MXNet. You can use Thinc as an interface layer, a standalone toolkit 
+    or a flexible way to develop new models. Previous versions of Thinc have been running quietly in production in thousands of companies, 
+    via both spaCy and Prodigy.
   dev_url: https://github.com/explosion/thinc/
   doc_url: https://thinc.ai/docs
 
@@ -85,3 +86,6 @@ extra:
     - honnibal
     - ines
     - adrianeboyd
+  skip-lints:
+    - cython_needs_compiler
+    - python_build_tool_in_run
