@@ -13,8 +13,8 @@ build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   skip: True  # [py<36]
-  # 2021/11/11: skip s390x as many dependencies are not on this platform: 
-  # e.x., preshed, cython-blis, cymem, murmurhash. 
+  # 2021/11/11: skip s390x as many dependencies are not on this platform:
+  # e.x., preshed, cython-blis, cymem, murmurhash.
   skip: True  # [s390x]
 
 requirements:
