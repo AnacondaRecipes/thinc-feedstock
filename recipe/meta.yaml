@@ -1,5 +1,5 @@
 {% set name = "thinc" %}
-{% set version = "8.1.10" %}
+{% set version = "8.2.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,14 +7,14 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 6c4a48d7da07e044e84a68cbb9b22f32f8490995a2bab0bfc60e412d14afb991
+  sha256: 6e85b944672c0f95241a71f67f9882e1ab319c449a47740b0d159f4cf86d1587
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   skip: True  # [py<36]
-  # 2021/11/11: skip s390x as many dependencies are not on this platform: 
-  # e.x., preshed, cython-blis, cymem, murmurhash. 
+  # 2021/11/11: skip s390x as many dependencies are not on this platform:
+  # e.x., preshed, cython-blis, cymem, murmurhash.
   skip: True  # [s390x]
 
 requirements:
@@ -73,10 +73,10 @@ about:
   license_file: LICENSE
   summary: A refreshing functional take on deep learning, compatible with your favorite libraries.
   description: |
-    Thinc is a lightweight deep learning library that offers an elegant, type-checked, functional-programming API 
-    for composing models, with support for layers defined in other frameworks 
-    such as PyTorch, TensorFlow and MXNet. You can use Thinc as an interface layer, a standalone toolkit 
-    or a flexible way to develop new models. Previous versions of Thinc have been running quietly in production in thousands of companies, 
+    Thinc is a lightweight deep learning library that offers an elegant, type-checked, functional-programming API
+    for composing models, with support for layers defined in other frameworks
+    such as PyTorch, TensorFlow and MXNet. You can use Thinc as an interface layer, a standalone toolkit
+    or a flexible way to develop new models. Previous versions of Thinc have been running quietly in production in thousands of companies,
     via both spaCy and Prodigy.
   dev_url: https://github.com/explosion/thinc/
   doc_url: https://thinc.ai/docs
