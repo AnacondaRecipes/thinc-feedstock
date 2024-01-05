@@ -21,13 +21,13 @@ requirements:
   build:
     - {{ compiler('cxx') }}
   host:
-    - cymem
-    - cython 0.29
-    - cython-blis
-    - murmurhash
+    - cymem >=2.0.2,<2.1.0
+    - cython >=0.25,<3.0
+    - cython-blis >=0.7.8,<0.8.0
+    - murmurhash >=1.0.2,<1.1.0
     - numpy {{ numpy }}
     - pip
-    - preshed
+    - preshed >=3.0.2,<3.1.0
     - python
     - setuptools
     - wheel
