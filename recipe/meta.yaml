@@ -12,7 +12,8 @@ source:
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-  skip: True  # [py<36]
+  # numpy-base >=2.0.0 requires python >=3.9
+  skip: True  # [py<39]
   # 2021/11/11: skip s390x as many dependencies are not on this platform:
   # e.x., preshed, cython-blis, cymem, murmurhash.
   skip: True  # [s390x]
