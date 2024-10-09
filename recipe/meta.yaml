@@ -25,7 +25,7 @@ requirements:
     - cython >=0.25,<3.0
     - cython-blis >=1.0.0,<1.1.0
     - murmurhash >=1.0.2,<1.1.0
-    - numpy {{ numpy }}
+    - numpy >=2.0.0,<2.1.0
     - pip
     - preshed >=3.0.2,<3.1.0
     - python
@@ -33,7 +33,7 @@ requirements:
     - wheel
   run:
     - python
-    - {{ pin_compatible('numpy') }}
+    - numpy >=2.0.0,<2.1.0
     - murmurhash >=1.0.2,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
@@ -52,7 +52,7 @@ test:
   requires:
     - hypothesis >=3.27.0,<6.72.2
     - pytest >=5.2.0,!=7.1.0
-    - mock >=2.0.0,<3.0.0
+    - mock
     # Python 3.12 isn't compatible, see https://github.com/justindujardin/pathy/issues/106
     - pathy >=0.3.5  # [py<312]
     # For thinc.api
