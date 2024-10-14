@@ -1,5 +1,5 @@
 {% set name = "thinc" %}
-{% set version = "8.2.2" %}
+{% set version = "8.3.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,12 +7,13 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 6e85b944672c0f95241a71f67f9882e1ab319c449a47740b0d159f4cf86d1587
+  sha256: 3e8ef69eac89a601e11d47fc9e43d26ffe7ef682dcf667c94ff35ff690549aeb
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-  skip: True  # [py<36]
+  # numpy-base >=2.0.0 requires python >=3.9
+  skip: True  # [py<39]
   # 2021/11/11: skip s390x as many dependencies are not on this platform:
   # e.x., preshed, cython-blis, cymem, murmurhash.
   skip: True  # [s390x]
@@ -23,9 +24,9 @@ requirements:
   host:
     - cymem >=2.0.2,<2.1.0
     - cython >=0.25,<3.0
-    - cython-blis >=0.7.8,<0.8.0
+    - cython-blis >=1.0.0,<1.1.0
     - murmurhash >=1.0.2,<1.1.0
-    - numpy {{ numpy }}
+    - numpy >=2.0.0,<2.1.0
     - pip
     - preshed >=3.0.2,<3.1.0
     - python
@@ -33,11 +34,11 @@ requirements:
     - wheel
   run:
     - python
-    - {{ pin_compatible('numpy') }}
+    - numpy >=2.0.0,<2.1.0
     - murmurhash >=1.0.2,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
-    - cython-blis >=0.7.8,<0.8.0
+    - cython-blis >=1.0.0,<1.1.0
     - wasabi >=0.8.1,<1.2.0
     - srsly >=2.4.0,<3.0.0
     - catalogue >=2.0.4,<2.1.0
@@ -45,13 +46,11 @@ requirements:
     - pydantic >=1.7.4,!=1.8,!=1.8.1,<3.0.0
     - packaging >=20.0
     - setuptools
-    # Backports of modern Python features
-    - typing_extensions >=3.7.4.1,<4.5.0  # [py<38]
 
 test:
   requires:
-    - hypothesis
-    - pytest
+    - hypothesis >=3.27.0,<6.72.2
+    - pytest >=5.2.0,!=7.1.0
     - mock
     # Python 3.12 isn't compatible, see https://github.com/justindujardin/pathy/issues/106
     - pathy >=0.3.5  # [py<312]
