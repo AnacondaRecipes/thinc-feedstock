@@ -39,7 +39,7 @@ requirements:
   run:
     - python
     # loosened bounds as per https://github.com/explosion/thinc/compare/release-v8.3.2...release-v8.3.4
-    - numpy>=1.19.0,<3.0.0
+    - numpy >=1.19.0,<3.0.0
     - murmurhash >=1.0.2,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
