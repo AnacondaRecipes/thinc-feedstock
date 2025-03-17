@@ -8,9 +8,11 @@ package:
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 3e8ef69eac89a601e11d47fc9e43d26ffe7ef682dcf667c94ff35ff690549aeb
+  patches:
+    - loosen-numpy-bounds.patch
 
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   # numpy-base >=2.0.0 requires python >=3.9
   skip: True  # [py<39]
@@ -21,12 +23,14 @@ build:
 requirements:
   build:
     - {{ compiler('cxx') }}
+    - patch # [unix]
+    - m2-patch # [win]
   host:
     - cymem >=2.0.2,<2.1.0
     - cython >=0.25,<3.0
     - cython-blis >=1.0.0,<1.1.0
     - murmurhash >=1.0.2,<1.1.0
-    - numpy >=2.0.0,<2.1.0
+    - numpy >=2.0.0,<3.0.0
     - pip
     - preshed >=3.0.2,<3.1.0
     - python
@@ -34,7 +38,8 @@ requirements:
     - wheel
   run:
     - python
-    - numpy >=2.0.0,<2.1.0
+    # loosened bounds as per https://github.com/explosion/thinc/compare/release-v8.3.2...release-v8.3.4
+    - numpy >=1.19.0,<3.0.0
     - murmurhash >=1.0.2,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
@@ -52,9 +57,6 @@ test:
     - hypothesis >=3.27.0,<6.72.2
     - pytest >=5.2.0,!=7.1.0
     - mock
-    # Python 3.12 isn't compatible, see https://github.com/justindujardin/pathy/issues/106
-    - pathy >=0.3.5  # [py<312]
-    # For thinc.api
     - pip
   imports:
     - thinc
@@ -66,6 +68,7 @@ test:
   commands:
     - pip check
     - python -m pytest --tb=native --pyargs thinc
+
 about:
   home: https://thinc.ai/
   license: MIT
