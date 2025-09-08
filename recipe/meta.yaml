@@ -13,9 +13,6 @@ build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   skip: True  # [py<39 or py>313]
-  ignore_run_exports:
-    - libcxx
-    - numpy
 
 requirements:
   build:
