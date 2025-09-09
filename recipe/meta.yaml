@@ -1,76 +1,92 @@
 {% set name = "thinc" %}
-{% set version = "8.3.2" %}
+{% set version = "9.1.1" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 3e8ef69eac89a601e11d47fc9e43d26ffe7ef682dcf667c94ff35ff690549aeb
-  patches:
-    - loosen-numpy-bounds.patch
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 21fae2986d7777a6f050b9046dc9eab11852f1c9a997dcc9032f3ecc22784a4a
 
 build:
-  number: 1
+  number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-  # numpy-base >=2.0.0 requires python >=3.9
-  skip: True  # [py<39]
-  # 2021/11/11: skip s390x as many dependencies are not on this platform:
-  # e.x., preshed, cython-blis, cymem, murmurhash.
-  skip: True  # [s390x]
+  # Cython 0.29.37 is not available for Py 313.
+  skip: True  # [py<39 or py>312]
 
 requirements:
   build:
     - {{ compiler('cxx') }}
-    - patch # [unix]
-    - m2-patch # [win]
   host:
-    - cymem >=2.0.2,<2.1.0
-    - cython >=0.25,<3.0
-    - cython-blis >=1.0.0,<1.1.0
-    - murmurhash >=1.0.2,<1.1.0
-    - numpy >=2.0.0,<3.0.0
     - pip
-    - preshed >=3.0.2,<3.1.0
     - python
-    - setuptools
     - wheel
+    - setuptools
+    - cython >=0.25,<3.0
+    - murmurhash >=1.0.2,<1.1.0
+    - cymem >=2.0.2,<2.1.0
+    - preshed >=3.0.2,<3.1.0
+    - cython-blis >=1.0.0,<1.1.0
+    - numpy >=2.0.0,<3.0.0  # [py<39]
   run:
     - python
-    # loosened bounds as per https://github.com/explosion/thinc/compare/release-v8.3.2...release-v8.3.4
     - numpy >=1.19.0,<3.0.0
+    - cython-blis >=1.0.0,<1.1.0
     - murmurhash >=1.0.2,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
-    - cython-blis >=1.0.0,<1.1.0
     - wasabi >=0.8.1,<1.2.0
     - srsly >=2.4.0,<3.0.0
     - catalogue >=2.0.4,<2.1.0
     - confection >=0.0.1,<1.0.0
+    - setuptools
     - pydantic >=1.7.4,!=1.8,!=1.8.1,<3.0.0
     - packaging >=20.0
-    - setuptools
+  run_constrained:
+    # datasets
+    - ml_datasets >=0.2.0,<0.3.0
+    # mxnet
+    - mxnet >=1.5.1,<1.6.0
+    # tensorflow
+    - tensorflow >=2.0.0,<2.6.0
+    # torch
+    - pytorch >=1.6.0
 
 test:
-  requires:
-    - hypothesis >=3.27.0,<6.72.2
-    - pytest >=5.2.0,!=7.1.0
-    - mock
-    - pip
   imports:
     - thinc
     - thinc.api
     - thinc.backends
-    - thinc.extra
+    - thinc.backends._custom_kernels
+    - thinc.backends._param_server
+    - thinc.compat
+    - thinc.config
     - thinc.layers
-    - thinc.shims
+    - thinc.layers.gelu
+    - thinc.layers.parametricattention_v2
+    - thinc.layers.pytorchwrapper
+    - thinc.layers.resizable
+    - thinc.layers.uniqued
+    - thinc.model
+    - thinc.optimizers
+    - thinc.schedules
+    - thinc.shims.pytorch
+    - thinc.shims.pytorch_grad_scaler
+    - thinc.shims.shim
+    - thinc.types
+    - thinc.util
   commands:
     - pip check
     - python -m pytest --tb=native --pyargs thinc
+  requires:
+    - hypothesis
+    - pytest
+    - mock
+    - pip
 
 about:
-  home: https://thinc.ai/
+  home: https://thinc.ai
   license: MIT
   license_family: MIT
   license_file: LICENSE
@@ -81,7 +97,7 @@ about:
     such as PyTorch, TensorFlow and MXNet. You can use Thinc as an interface layer, a standalone toolkit 
     or a flexible way to develop new models. Previous versions of Thinc have been running quietly in production in thousands of companies, 
     via both spaCy and Prodigy.
-  dev_url: https://github.com/explosion/thinc/
+  dev_url: https://github.com/explosion/thinc
   doc_url: https://thinc.ai/docs
 
 extra:
@@ -93,3 +109,4 @@ extra:
   skip-lints:
     - cython_needs_compiler
     - python_build_tool_in_run
+    - should_use_stdlib
