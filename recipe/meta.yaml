@@ -12,7 +12,8 @@ source:
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-  skip: True  # [py<39]
+  # Cython 0.29.37 is not available for Py 313.
+  skip: True  # [py<39 or py>312]
 
 requirements:
   build:
