@@ -36,7 +36,7 @@ requirements:
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
     - wasabi >=0.8.1,<1.2.0
-    - srsly >=2.4.0,<3.0.0
+    - srsly >=2.4.0,<3.1.0
     - catalogue >=2.0.4,<2.1.0
     - confection >=1.1.0,<2.0.0
     - setuptools
@@ -71,9 +71,8 @@ test:
     # --deselect runs after import; this file fails at import time — use --ignore.
     - pytest -v thinc/tests --ignore=thinc/tests/test_config.py  # [py==314]
   requires:
-    - hypothesis
-    - pytest
-    - mock
+    - hypothesis >=3.27.0,<6.149
+    - pytest >=5.2.0,!=7.1.0
     - pip
 
 about:
@@ -86,8 +85,8 @@ about:
     Thinc is a lightweight deep learning library that offers an elegant, type-checked, functional-programming API 
     for composing models, with support for layers defined in other frameworks 
     such as PyTorch, TensorFlow and MXNet. You can use Thinc as an interface layer, a standalone toolkit 
-    or a flexible way to develop new models. Previous versions of Thinc have been running quietly in production in thousands of companies, 
-    via both spaCy and Prodigy.
+    or a flexible way to develop new models. Previous versions of Thinc have been running quietly in production
+    in thousands of companies, via both spaCy and Prodigy.
   dev_url: https://github.com/explosion/thinc
   doc_url: https://thinc.ai/docs
 
