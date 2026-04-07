@@ -1,5 +1,5 @@
 {% set name = "thinc" %}
-{% set version = "8.3.10" %}
+{% set version = "8.3.13" %}
 
 package:
   name: {{ name|lower }}
@@ -7,12 +7,12 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 5a75109f4ee1c968fc055ce651a17cb44b23b000d9e95f04a4d047ab3cb3e34e
+  sha256: 68e658549fc1eb3ff92aed5147fcbb9c15d6e9cc0e623b4d0998d16522ffb4f9
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-  skip: True  # [py<310 or py>315]
+  skip: True  # [py<310 or py>314]
 
 requirements:
   build:
@@ -21,7 +21,6 @@ requirements:
   host:
     - pip
     - python
-    - wheel
     - setuptools
     - cython >=3.0,<4.0
     - murmurhash >=1.0.2,<1.1.0
@@ -31,22 +30,18 @@ requirements:
     - numpy {{ numpy }}
   run:
     - python
-    # loosened bounds as per https://github.com/explosion/thinc/compare/release-v8.3.2...release-v8.3.6
     - numpy {{ numpy }}
     - cython-blis >=1.3.0,<1.4.0
     - murmurhash >=1.0.2,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
     - wasabi >=0.8.1,<1.2.0
-    - srsly >=2.4.0,<3.0.0
+    - srsly >=2.4.0,<3.1.0
     - catalogue >=2.0.4,<2.1.0
-    - confection >=0.0.1,<1.0.0
+    - confection >=1.1.0,<2.0.0
     - setuptools
     - pydantic >=2.0.0,<3.0.0
     - packaging >=20.0
-    - dataclasses >=0.6,<1.0  # [py<37]
-    - typing_extensions >=3.7.4.1,<5.0.0  # [py<38]
-    - contextvars >=2.4,<3  # [py<37]
   run_constrained:
     # apple
     - thinc-apple-ops >=1.0.0,<2.0.0
@@ -67,13 +62,17 @@ test:
     - thinc.extra
     - thinc.layers
     - thinc.shims
+  source_files:
+    - thinc/tests/
   commands:
     - pip check
-    - python -m pytest --tb=native --pyargs thinc
+    - pytest -v thinc/tests  # [py<314]
+    # Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+    # --deselect runs after import; this file fails at import time — use --ignore.
+    - pytest -v thinc/tests --ignore=thinc/tests/test_config.py  # [py==314]
   requires:
-    - hypothesis
-    - pytest
-    - mock
+    - hypothesis >=3.27.0,<6.149
+    - pytest >=5.2.0,!=7.1.0
     - pip
 
 about:
@@ -86,8 +85,8 @@ about:
     Thinc is a lightweight deep learning library that offers an elegant, type-checked, functional-programming API 
     for composing models, with support for layers defined in other frameworks 
     such as PyTorch, TensorFlow and MXNet. You can use Thinc as an interface layer, a standalone toolkit 
-    or a flexible way to develop new models. Previous versions of Thinc have been running quietly in production in thousands of companies, 
-    via both spaCy and Prodigy.
+    or a flexible way to develop new models. Previous versions of Thinc have been running quietly in production
+    in thousands of companies, via both spaCy and Prodigy.
   dev_url: https://github.com/explosion/thinc
   doc_url: https://thinc.ai/docs
 
