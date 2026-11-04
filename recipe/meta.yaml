@@ -1,47 +1,51 @@
 {% set name = "thinc" %}
-{% set version = "9.1.1" %}
+{% set version = "10.0.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 21fae2986d7777a6f050b9046dc9eab11852f1c9a997dcc9032f3ecc22784a4a
+  sha256: fca954898365f66d9a128eccec51c0151c4298d9bdd6ca2d7094a0686f674b3f
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-  # Cython 0.29.37 is not available for Py 313.
-  skip: True  # [py<39 or py>312]
+  entry_points:
+    - thinc = thinc.api:fix_random_seed
+  skip: true  # [py<310]
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
   host:
     - pip
     - python
     - wheel
     - setuptools
-    - cython >=0.25,<3.0
-    - murmurhash >=1.0.2,<1.1.0
+    - cython >=3.0,<4.0
+    - numpy >=2.0.0,<3.0.0
+    # We also need our Cython packages here to compile against
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
-    - cython-blis >=1.0.0,<1.1.0
-    - numpy >=2.0.0,<3.0.0  # [py<39]
+    - murmurhash >=1.0.2,<1.1.0
+    - cython-blis >=1.3.0,<1.4.0
   run:
     - python
-    - numpy >=1.19.0,<3.0.0
-    - cython-blis >=1.0.0,<1.1.0
+    - cython-blis >=1.3.0,<1.4.0
     - murmurhash >=1.0.2,<1.1.0
     - cymem >=2.0.2,<2.1.0
     - preshed >=3.0.2,<3.1.0
     - wasabi >=0.8.1,<1.2.0
-    - srsly >=2.4.0,<3.0.0
+    - srsly >=2.4.0,<3.1.0
     - catalogue >=2.0.4,<2.1.0
-    - confection >=0.0.1,<1.0.0
+    - confection >=1.3.2,<2.0.0
+    # Third-party dependencies
     - setuptools
-    - pydantic >=1.7.4,!=1.8,!=1.8.1,<3.0.0
+    - numpy >=1.21.0,<3.0.0
+    - pydantic >=2.0.0,<3.0.0
     - packaging >=20.0
   run_constrained:
     # datasets
@@ -52,6 +56,8 @@ requirements:
     - tensorflow >=2.0.0,<2.6.0
     # torch
     - pytorch >=1.6.0
+    # apple, not in the main channel
+    # - thinc-apple-ops >=1.0.0,<2.0.0
 
 test:
   imports:
@@ -92,10 +98,10 @@ about:
   license_file: LICENSE
   summary: A refreshing functional take on deep learning, compatible with your favorite libraries.
   description: |
-    Thinc is a lightweight deep learning library that offers an elegant, type-checked, functional-programming API 
-    for composing models, with support for layers defined in other frameworks 
-    such as PyTorch, TensorFlow and MXNet. You can use Thinc as an interface layer, a standalone toolkit 
-    or a flexible way to develop new models. Previous versions of Thinc have been running quietly in production in thousands of companies, 
+    Thinc is a lightweight deep learning library that offers an elegant, type-checked, functional-programming API
+    for composing models, with support for layers defined in other frameworks
+    such as PyTorch, TensorFlow and MXNet. You can use Thinc as an interface layer, a standalone toolkit
+    or a flexible way to develop new models. Previous versions of Thinc have been running quietly in production in thousands of companies,
     via both spaCy and Prodigy.
   dev_url: https://github.com/explosion/thinc
   doc_url: https://thinc.ai/docs
@@ -109,4 +115,3 @@ extra:
   skip-lints:
     - cython_needs_compiler
     - python_build_tool_in_run
-    - should_use_stdlib
